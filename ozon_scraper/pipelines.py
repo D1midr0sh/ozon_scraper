@@ -1,13 +1,16 @@
-# Define your item pipelines here
-#
-# Don't forget to add your pipeline to the ITEM_PIPELINES setting
-# See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-
-
-# useful for handling different item types with a single interface
-from itemadapter import ItemAdapter
+import pandas as pd
 
 
 class OzonScraperPipeline:
+    all_items = []
+
     def process_item(self, item, spider):
+        self.all_items.append(item)
         return item
+
+    def close_spider(self, spider):
+        df = pd.DataFrame(self.all_items)
+        with open("data.csv", "w") as f:
+            df.value_counts().to_csv(f)
+
+        print(df.value_counts())

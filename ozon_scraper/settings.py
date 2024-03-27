@@ -1,23 +1,14 @@
-# Scrapy settings for ozon_scraper project
-#
-# For simplicity, this file contains only settings considered important or
-# commonly used. You can find more settings consulting the documentation:
-#
-#     https://docs.scrapy.org/en/latest/topics/settings.html
-#     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
-#     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
-
 BOT_NAME = "ozon_scraper"
 
 SPIDER_MODULES = ["ozon_scraper.spiders"]
 NEWSPIDER_MODULE = "ozon_scraper.spiders"
 
-
-# Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = "ozon_scraper (+http://www.yourdomain.com)"
-
 # Obey robots.txt rules
-ROBOTSTXT_OBEY = True
+ROBOTSTXT_OBEY = False
+
+PROXY_POOL_ENABLED = True
+
+USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.80 Safari/537.36'
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32
@@ -48,11 +39,11 @@ ROBOTSTXT_OBEY = True
 #    "ozon_scraper.middlewares.OzonScraperSpiderMiddleware": 543,
 #}
 
-# Enable or disable downloader middlewares
-# See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
-#DOWNLOADER_MIDDLEWARES = {
-#    "ozon_scraper.middlewares.OzonScraperDownloaderMiddleware": 543,
-#}
+DOWNLOADER_MIDDLEWARES = {
+    "ozon_scraper.middlewares.OzonScraperDownloaderMiddleware": 543,
+    "scrapy_proxy_pool.middlewares.ProxyPoolMiddleware": 610,
+    "scrapy_proxy_pool.middlewares.BanDetectionMiddleware": 620,
+}
 
 # Enable or disable extensions
 # See https://docs.scrapy.org/en/latest/topics/extensions.html
@@ -62,9 +53,9 @@ ROBOTSTXT_OBEY = True
 
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
-#    "ozon_scraper.pipelines.OzonScraperPipeline": 300,
-#}
+ITEM_PIPELINES = {
+    "ozon_scraper.pipelines.OzonScraperPipeline": 300,
+}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html

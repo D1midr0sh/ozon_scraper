@@ -1,12 +1,10 @@
-# Define here the models for your spider middleware
-#
-# See documentation in:
-# https://docs.scrapy.org/en/latest/topics/spider-middleware.html
-
+from selenium.webdriver.chrome.service import Service
 from scrapy import signals
+from scrapy.http import HtmlResponse
+import undetected_chromedriver as uc
 
-# useful for handling different item types with a single interface
-from itemadapter import is_item, ItemAdapter
+from time import sleep
+from random import randint
 
 
 class OzonScraperSpiderMiddleware:
@@ -61,6 +59,11 @@ class OzonScraperDownloaderMiddleware:
     # scrapy acts as if the downloader middleware does not modify the
     # passed objects.
 
+    def __init__(self):
+        options = uc.ChromeOptions()
+        options.headless = False
+        self.driver = uc.Chrome(service=Service("chromedriver.exe"), options=options, use_subprocess=True)
+
     @classmethod
     def from_crawler(cls, crawler):
         # This method is used by Scrapy to create your spiders.
@@ -69,16 +72,13 @@ class OzonScraperDownloaderMiddleware:
         return s
 
     def process_request(self, request, spider):
-        # Called for each request that goes through the downloader
-        # middleware.
-
-        # Must either:
-        # - return None: continue processing this request
-        # - or return a Response object
-        # - or return a Request object
-        # - or raise IgnoreRequest: process_exception() methods of
-        #   installed downloader middleware will be called
-        return None
+        self.driver.get(request.url)
+        sleep(randint(4, 5))
+        content = self.driver.page_source
+        self.driver.delete_all_cookies()
+        return HtmlResponse(
+            request.url, encoding="utf-8", body=content, request=request
+        )
 
     def process_response(self, request, response, spider):
         # Called with the response returned from the downloader.
