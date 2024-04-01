@@ -7,7 +7,7 @@ from ozon_scraper.items import OzonScraperItem
 from urllib.parse import urlencode
 
 
-API_KEY = "5ce39613901c3ea43e64f41efd5ab85f"
+API_KEY = "api_key"  # insert your scrapy API key here
 
 
 def proxy(url):
